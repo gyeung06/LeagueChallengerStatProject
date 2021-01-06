@@ -1,16 +1,35 @@
-# This is a sample Python script.
+from pantheon import pantheon
+import asyncio
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+server = "na1"
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+#Put in own dev key to test
+api_key = "RGAPI-xxx"
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def requestLog(url, status, headers):
+    print(url)
+    print(status)
+    print(headers)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+panth = pantheon.Pantheon(server, api_key, errorHandling=True, requestsLoggingFunction=requestLog, debug=True)
+
+
+async def getSummonerId(name):
+    try:
+        data = await panth.getSummonerByName(name)
+        return data['id'], data['accountId']
+    except Exception as e:
+        print(e)
+
+
+name = "FunOnDaBun"
+
+loop = asyncio.get_event_loop()
+
+(summonerId, accountId) = loop.run_until_complete(getSummonerId(name))
+
+print(summonerId)
+print(accountId)
+
